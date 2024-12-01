@@ -13,7 +13,7 @@ export const POST = async (req: NextRequest) => {
   });
 
   if (!user) {
-    return NextResponse.json({ error: 'User not found' }, { status: 400 });
+    return NextResponse.json({ error: 'User not found', code: 404 }, { status: 404 });
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);

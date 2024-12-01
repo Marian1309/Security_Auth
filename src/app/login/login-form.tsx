@@ -41,6 +41,11 @@ const LoginForm: FC = () => {
       toast.success('Logged in successfully.');
     } else {
       const data = await response.json();
+
+      if (data.code === 404) {
+        router.push('/register?notFound=true');
+      }
+
       setError(data.error || 'Invalid email or password.');
     }
   };

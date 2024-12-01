@@ -3,7 +3,9 @@
 import type { ChangeEvent, FC, FormEvent } from 'react';
 import { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import { toast } from 'react-hot-toast';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +17,16 @@ const RegisterForm: FC = () => {
   const [error, setError] = useState<string>('');
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const notFound = searchParams.get('notFound');
+
+  if (notFound) {
+    setTimeout(() => {
+      toast.error('User not found. Please register first.');
+      router.replace('/register');
+    }, 1000);
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
