@@ -11,7 +11,7 @@ type Props = {
 const Loading: FC<Props> = ({ loading = true }) => {
   return (
     <div className="min-h-screen flex-center">
-      <BounceLoader color="hsl(var(--text-accent))" loading={loading} size={40} />
+      <BounceLoader color="rgb(79, 70, 229)" loading={loading} size={40} />
     </div>
   );
 };

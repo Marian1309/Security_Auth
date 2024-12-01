@@ -5,9 +5,3 @@
 @import '../styles/shadcn-ui';
 @import '../styles/reset';
 @import '../styles/theming';
-
-@layer base {
-  body {
-    @apply bg-primary font-primary text-white;
-  }
-}
