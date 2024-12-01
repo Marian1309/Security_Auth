@@ -3,7 +3,9 @@
 import type { ChangeEvent, FC, FormEvent } from 'react';
 import { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import toast from 'react-hot-toast';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,19 +15,27 @@ const LoginForm: FC = () => {
   const [fields, setFields] = useState({ email: '', password: '' });
   const [error, setError] = useState<string>('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const registered = searchParams.get('registered');
+
+  if (registered) {
+    toast.success('Account created successfully. Please login.');
+  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
-    const response = await fetch('/api/login', {
+    const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(fields)
     });
 
     if (response.ok) {
-      router.push('/dashboard');
+      router.push('/');
+      toast.success('Logged in successfully.');
     } else {
       const data = await response.json();
       setError(data.error || 'Invalid email or password.');

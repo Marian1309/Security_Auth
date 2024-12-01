@@ -26,14 +26,14 @@ const RegisterForm: FC = () => {
     e.preventDefault();
     setError('');
 
-    const response = await fetch('/api/register', {
+    const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(fields)
     });
 
     if (response.ok) {
-      router.push('/login');
+      router.push('/login?registered=true');
     } else {
       const data = await response.json();
       setError(data.error || 'An error occurred during registration.');
