@@ -5,16 +5,20 @@ import { useState } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
+import ReCAPTCHA from 'react-google-recaptcha';
 import { toast } from 'react-hot-toast';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+const SITE_KEY = '6LfFj48qAAAAAA3v9DS9MN4vh2XVeaSpouY-H8_a';
+
 const RegisterForm: FC = () => {
   const [fields, setFields] = useState({ email: '', password: '' });
 
   const [error, setError] = useState<string>('');
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -38,10 +42,15 @@ const RegisterForm: FC = () => {
     e.preventDefault();
     setError('');
 
+    if (!captchaValue) {
+      setError('Please complete the CAPTCHA');
+      return;
+    }
+
     const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fields)
+      body: JSON.stringify({ ...fields, captchaValue })
     });
 
     if (response.ok) {
@@ -53,8 +62,8 @@ const RegisterForm: FC = () => {
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <div>
+    <form className="flex flex-col items-center space-y-4" onSubmit={handleSubmit}>
+      <div className="w-full">
         <Label className="block text-sm font-medium text-gray-700" htmlFor="email">
           Email
         </Label>
@@ -69,7 +78,7 @@ const RegisterForm: FC = () => {
         />
       </div>
 
-      <div>
+      <div className="w-full">
         <Label className="block text-sm font-medium text-gray-700" htmlFor="password">
           Password
         </Label>
@@ -93,6 +102,8 @@ const RegisterForm: FC = () => {
       >
         Register
       </Button>
+
+      <ReCAPTCHA onChange={(value) => setCaptchaValue(value)} sitekey={SITE_KEY} />
     </form>
   );
 };

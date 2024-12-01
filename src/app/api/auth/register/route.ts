@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import axios from 'axios';
 import bcrypt from 'bcrypt';
 
 import db from '@/db';
@@ -42,7 +43,21 @@ export const validatePassword = (password: string) => {
 };
 
 export const POST = async (req: NextRequest) => {
-  const { email, password } = await req.json();
+  const { email, password, captchaValue } = await req.json();
+
+  const SECRET_KEY = '6LfFj48qAAAAAG839gCmsofK3O7XkPflvm9Ft1Dp';
+  const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${captchaValue}`;
+
+  try {
+    const captchaResponse = await axios.post(verifyUrl);
+    const { success } = captchaResponse.data;
+
+    if (!success) {
+      return NextResponse.json({ error: 'Captcha verification failed' }, { status: 400 });
+    }
+  } catch (error) {
+    return NextResponse.json({ error: 'Error verifying captcha' }, { status: 500 });
+  }
 
   const existingUser = await db.user.findUnique({
     where: { email }
