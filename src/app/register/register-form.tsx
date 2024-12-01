@@ -54,7 +54,7 @@ const RegisterForm: FC = () => {
     });
 
     if (response.ok) {
-      router.push('/login?registered=true');
+      router.push('/login');
     } else {
       const data = await response.json();
       setError(data.error || 'An error occurred during registration.');

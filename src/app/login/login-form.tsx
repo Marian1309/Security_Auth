@@ -17,11 +17,11 @@ const LoginForm: FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const registered = searchParams.get('registered');
+  const activated = searchParams.get('activated');
 
-  if (registered) {
+  if (activated) {
     setTimeout(() => {
-      toast.success('Account created successfully. Please login.');
+      toast.success('Account activated successfully. Please login.');
       router.replace('/login');
     }, 1000);
   }
@@ -36,12 +36,13 @@ const LoginForm: FC = () => {
       body: JSON.stringify(fields)
     });
 
+    const data = await response.json();
+
     if (response.ok) {
       router.push('/');
       toast.success('Logged in successfully.');
+      localStorage.setItem('user', JSON.stringify(data.user));
     } else {
-      const data = await response.json();
-
       if (data.code === 404) {
         router.push('/register?notFound=true');
       }

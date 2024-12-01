@@ -22,5 +22,14 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: 'Invalid password' }, { status: 400 });
   }
 
-  return NextResponse.json({ message: 'Login successful' }, { status: 200 });
+  const isActive = user.isActive;
+
+  if (!isActive) {
+    return NextResponse.json(
+      { error: 'Your account is not activated, please activate it in the email' },
+      { status: 400 }
+    );
+  }
+
+  return NextResponse.json({ message: 'Login successful', user }, { status: 200 });
 };

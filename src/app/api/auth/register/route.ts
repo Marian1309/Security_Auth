@@ -78,8 +78,14 @@ export const POST = async (req: NextRequest) => {
   await db.user.create({
     data: {
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      isActive: false
     }
+  });
+
+  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/send-activation-email`, {
+    method: 'POST',
+    body: JSON.stringify({ email })
   });
 
   return NextResponse.json({ message: 'User registered successfully' }, { status: 201 });
