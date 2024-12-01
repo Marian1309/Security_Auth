@@ -5,7 +5,41 @@ import bcrypt from 'bcrypt';
 
 import db from '@/db';
 
-import { validatePassword } from '@/lib/utils';
+export const validatePassword = (password: string) => {
+  if (password.length < 8) {
+    return NextResponse.json(
+      {
+        error: 'Password must be at least 8 characters'
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+    return NextResponse.json(
+      {
+        error: 'Password must contain both uppercase and lowercase letters'
+      },
+      { status: 400 }
+    );
+  }
+
+  if (!/\d/.test(password)) {
+    return NextResponse.json(
+      { error: 'Password must contain a number' },
+      { status: 400 }
+    );
+  }
+
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return NextResponse.json(
+      { error: 'Password must contain a special character' },
+      { status: 400 }
+    );
+  }
+
+  return undefined;
+};
 
 export const POST = async (req: NextRequest) => {
   const { email, password } = await req.json();
@@ -18,7 +52,11 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: 'User already exists' }, { status: 400 });
   }
 
-  validatePassword(password);
+  const isValidPassword = validatePassword(password);
+
+  if (isValidPassword) {
+    return isValidPassword;
+  }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 

@@ -20,7 +20,10 @@ const LoginForm: FC = () => {
   const registered = searchParams.get('registered');
 
   if (registered) {
-    toast.success('Account created successfully. Please login.');
+    setTimeout(() => {
+      toast.success('Account created successfully. Please login.');
+      router.replace('/login');
+    }, 1000);
   }
 
   const handleSubmit = async (e: FormEvent) => {
