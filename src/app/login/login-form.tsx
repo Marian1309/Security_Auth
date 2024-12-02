@@ -5,7 +5,9 @@ import { useState } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
+import { signIn } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { FcGoogle } from 'react-icons/fc';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -92,13 +94,28 @@ const LoginForm: FC = () => {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      <Button
-        className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        type="submit"
-        variant="default"
-      >
-        Login
-      </Button>
+      <div className="flex items-center gap-x-2">
+        <Button
+          className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          size="lg"
+          type="submit"
+          variant="default"
+        >
+          Login
+        </Button>
+
+        <Button
+          className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          onClick={() => signIn('google')}
+          size="lg"
+          type="button"
+          variant="default"
+        >
+          <div className="flex items-center gap-x-2">
+            Login with Google <FcGoogle size={20} />
+          </div>
+        </Button>
+      </div>
     </form>
   );
 };
