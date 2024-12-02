@@ -1,4 +1,4 @@
-# [Project Name](http://localhost:3000)
+# [PNU_Auth](http://localhost:3000)
 
 > **Warning** This project is still in development and is not ready for production use.
 
