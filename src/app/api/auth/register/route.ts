@@ -6,42 +6,6 @@ import bcrypt from 'bcrypt';
 
 import db from '@/db';
 
-export const validatePassword = (password: string) => {
-  if (password.length < 8) {
-    return NextResponse.json(
-      {
-        error: 'Password must be at least 8 characters'
-      },
-      { status: 400 }
-    );
-  }
-
-  if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
-    return NextResponse.json(
-      {
-        error: 'Password must contain both uppercase and lowercase letters'
-      },
-      { status: 400 }
-    );
-  }
-
-  if (!/\d/.test(password)) {
-    return NextResponse.json(
-      { error: 'Password must contain a number' },
-      { status: 400 }
-    );
-  }
-
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    return NextResponse.json(
-      { error: 'Password must contain a special character' },
-      { status: 400 }
-    );
-  }
-
-  return undefined;
-};
-
 export const POST = async (req: NextRequest) => {
   const { email, password, captchaValue } = await req.json();
 
@@ -67,10 +31,30 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: 'User already exists' }, { status: 400 });
   }
 
-  const isValidPassword = validatePassword(password);
+  const validatePassword = (password: string) => {
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
 
-  if (isValidPassword) {
-    return isValidPassword;
+    if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+      return 'Password must contain both uppercase and lowercase letters';
+    }
+
+    if (!/\d/.test(password)) {
+      return 'Password must contain a number';
+    }
+
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return 'Password must contain a special character';
+    }
+
+    return undefined;
+  };
+
+  const error = validatePassword(password);
+
+  if (error) {
+    return NextResponse.json({ error }, { status: 400 });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -83,10 +67,7 @@ export const POST = async (req: NextRequest) => {
     }
   });
 
-  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/send-activation-email`, {
-    method: 'POST',
-    body: JSON.stringify({ email })
-  });
+  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/send-activation-email`);
 
   return NextResponse.json({ message: 'User registered successfully' }, { status: 201 });
 };

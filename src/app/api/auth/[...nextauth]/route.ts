@@ -17,12 +17,10 @@ const handler = NextAuth({
     strategy: 'jwt'
   },
   callbacks: {
-    async session({ session, token }) {
-      session.user.id = token.sub;
+    async session({ session }) {
       return session;
     },
-    async signIn({ user }) {
-      console.log({ user });
+    async signIn() {
       return true;
     }
   }
