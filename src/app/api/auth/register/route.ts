@@ -67,7 +67,11 @@ export const POST = async (req: NextRequest) => {
     }
   });
 
-  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/send-activation-email`);
+  await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/send-activation-email`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  });
 
   return NextResponse.json({ message: 'User registered successfully' }, { status: 201 });
 };
