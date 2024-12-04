@@ -8,6 +8,36 @@ import db from '@/db';
 export const POST = async (req: NextRequest) => {
   const { token, password } = await req.json();
 
+  if (!password) {
+    return NextResponse.json({ error: 'Password is required' }, { status: 400 });
+  }
+
+  const validatePassword = (password: string) => {
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+
+    if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+      return 'Password must contain both uppercase and lowercase letters';
+    }
+
+    if (!/\d/.test(password)) {
+      return 'Password must contain a number';
+    }
+
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return 'Password must contain a special character';
+    }
+
+    return undefined;
+  };
+
+  const error = validatePassword(password);
+
+  if (error) {
+    return NextResponse.json({ error }, { status: 400 });
+  }
+
   const resetToken = await db.passwordResetToken.findUnique({
     where: { token }
   });

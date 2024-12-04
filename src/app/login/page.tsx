@@ -16,9 +16,13 @@ const LoginPage: FC = () => {
 
         <LoginForm />
 
-        <p className="text-center text-sm text-gray-500">
-          Don&apos;t have an account? <Link href="/register">Sign up</Link>
-        </p>
+        <div className="flex justify-between">
+          <Link href="/reset-password">Forgot password?</Link>
+
+          <p className="text-center text-sm text-gray-500">
+            Don&apos;t have an account? <Link href="/register">Sign up</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

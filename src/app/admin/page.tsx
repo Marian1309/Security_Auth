@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import type { NextPage } from 'next';
+
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -21,7 +23,7 @@ type Attempt = {
   createdAt: string;
 };
 
-const AdminPage = () => {
+const AdminPage: NextPage = () => {
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -29,6 +31,7 @@ const AdminPage = () => {
     const fetchAttempts = async () => {
       const res = await fetch('/api/auth/log-attempts');
       const data = await res.json();
+
       setAttempts(data);
       setLoading(false);
     };

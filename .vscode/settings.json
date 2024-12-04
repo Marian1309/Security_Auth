@@ -72,7 +72,7 @@
   "editor.renderWhitespace": "none",
   "git.autofetch": true,
   "git.enableSmartCommit": true,
-  "workbench.colorTheme": "Material Theme Darker High Contrast",
+  "workbench.colorTheme": "Ayu Dark Bordered",
   "editor.accessibilityPageSize": 300,
   "editor.bracketPairColorization.enabled": true,
   "explorer.expandSingleFolderWorkspaces": false,
